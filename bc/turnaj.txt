@@ -1,0 +1,31 @@
+6
+1
+Zilina
+1-a a
+2-b b
+;
+2
+Trencin
+3-c c
+4-d d
+;
+3
+Kosice
+5-n n
+6-f f 
+;
+4
+Bratislava
+7-h h 
+8-k k
+;
+5
+Dubnica
+9-e e
+10-g g
+;
+6
+Piestany
+11-i i
+12-j j
+;
