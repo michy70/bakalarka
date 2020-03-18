@@ -1,6 +1,7 @@
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -20,6 +21,7 @@ public class turnaj extends javax.swing.JFrame {
     String nazovTurnaja = "turnaj.txt";
     int pocetTymov = 0;
     int pocetTymovVSkupine = 0;
+    int pocetSkupin = 1;
     String[][][] skore;
     ArrayList<ArrayList<String>> tymy;
     /**
@@ -34,11 +36,11 @@ public class turnaj extends javax.swing.JFrame {
         pocetTymov = Integer.parseInt(citac.readLine());
         naplnenieMoznosti(pocetTymov);
         nacitanieTymov(citac);
+        nacitanieSkore();
         citac.close();
     }
     
     public void naplnenieMoznosti(int pocetTymov){
-        int pocetSkupin = 1;
         if(pocetTymov >= 6){
             pocetSkupin++;
         }
@@ -71,7 +73,37 @@ public class turnaj extends javax.swing.JFrame {
         }  
     }
     
-    public void nacitanieSkore(){
+    public void nacitanieSkore() throws FileNotFoundException {
+        String nazov = "";
+        for(int skupina = 0;skupina < pocetSkupin;skupina++){
+            for(int tymA = skupina*pocetTymovVSkupine;tymA<skupina*pocetTymovVSkupine+pocetTymovVSkupine;tymA++){
+                for(int tymB = skupina*pocetTymovVSkupine;tymB<skupina*pocetTymovVSkupine+pocetTymovVSkupine;tymB++){
+                    if(!(skupina == 1 && pocetTymov != pocetTymovVSkupine*2 && (tymA == skupina*pocetTymovVSkupine+pocetTymovVSkupine - 1
+                    || tymB == skupina*pocetTymovVSkupine+pocetTymovVSkupine - 1))){
+                        if(tymA != tymB){
+                            if(skore[skupina][tymA%pocetTymovVSkupine][tymB%pocetTymovVSkupine] == null){
+                                nazov = "C:\\Users\\bohuc\\Desktop\\bakalarka\\bc\\turnaj\\";
+                                nazov += tymy.get(tymA).get(0) + "-vs-" + tymy.get(tymB).get(0);
+                                File subor = new File(nazov);
+                                if(subor.exists()){
+                                    Scanner citac = new Scanner(subor);
+                                    citac.next();
+                                    citac.next();
+                                    String skoreA = citac.next();
+                                    String skoreB = citac.next();
+                                    String skoreZapasu = skoreA + ":" + skoreB;
+                                    skore[skupina][tymA%pocetTymovVSkupine][tymB%pocetTymovVSkupine] = skoreZapasu;
+                                    skoreZapasu = skoreB + ":" + skoreA;
+                                    skore[skupina][tymB%pocetTymovVSkupine][tymA%pocetTymovVSkupine] = skoreZapasu;
+                                }
+                            }
+                        } else {
+                            skore[skupina][tymA%pocetTymovVSkupine][tymB%pocetTymovVSkupine] = " X ";
+                        }
+                    }
+                }
+            }
+        }
         
     }
 
@@ -337,7 +369,12 @@ public class turnaj extends javax.swing.JFrame {
         for(int i = 0;i<nic;i++){
             model.removeRow(0);
         }
-        this.jTable.setRowHeight(590/(pocetTymovVSkupine+1));
+        if(cisloSkupiny == 2 && pocetTymov % 2 == 1){
+            this.jTable.setRowHeight(580/(pocetTymovVSkupine));
+        } else {
+            this.jTable.setRowHeight(580/(pocetTymovVSkupine+1));
+        }
+        
         nazvyTymovUvod(model, cisloSkupiny);
         skoreZapasov(model, cisloSkupiny);
         
@@ -346,15 +383,16 @@ public class turnaj extends javax.swing.JFrame {
         Object obj,objMenu;
         int c = cisloSkupiny-1;
         int d = pocetTymovVSkupine;
+        int chyba = d;
         
-        if(pocetTymov % 2 == 1 && cisloSkupiny == 2){
-            d--;
+        if(pocetTymov % 2 == 1 && c == 1){
+            chyba--;
         }
         
-        if(d == 3){
+        if(chyba == 3){
             model.setColumnIdentifiers(new Object[]{"","","",""});
             model.addRow(new Object[]{"",tymy.get(c*d).get(0),tymy.get(c*d+1).get(0),tymy.get(c*d+2).get(0)});
-        } else if(d == 4){
+        } else if(chyba == 4){
             model.setColumnIdentifiers(new Object[]{"","","","",""});
             model.addRow(new Object[]{"",tymy.get(c*d).get(0),tymy.get(c*d+1).get(0),tymy.get(c*d+2).get(0),
                                 tymy.get(c*d+3).get(0)});
@@ -367,10 +405,15 @@ public class turnaj extends javax.swing.JFrame {
     public void skoreZapasov(DefaultTableModel model,int cisloSkupiny){
         int c = cisloSkupiny-1;
         int d = pocetTymovVSkupine;
-        for(int i = 0;i < pocetTymovVSkupine;i++){
-            if(pocetTymovVSkupine == 3){
+        int chyba = d;
+        
+        if(pocetTymov % 2 == 1 && c == 1){
+            chyba--;
+        }
+        for(int i = 0;i < chyba;i++){
+            if(chyba == 3){
                 model.addRow(new Object[]{tymy.get(c*d+i).get(0),skore[c][i][0],skore[c][i][1],skore[c][i][2]});
-            } else if(pocetTymovVSkupine == 4){
+            } else if(chyba == 4){
                 model.addRow(new Object[]{tymy.get(c*d+i).get(0),skore[c][i][0],skore[c][i][1],
                                         skore[c][i][2],skore[c][i][3]});
             } else {
@@ -504,3 +547,4 @@ public class turnaj extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> volbaTabulky;
     // End of variables declaration//GEN-END:variables
 }
+

@@ -1,4 +1,4 @@
-6
+7
 1
 Zilina
 1-a a
@@ -26,6 +26,11 @@ Dubnica
 ;
 6
 Piestany
-11-i i
-12-j j
+11-j j
+12-i i
+;
+7
+Zvolen
+13-n n
+14-m m
 ;
