@@ -13,6 +13,8 @@ import javax.swing.JFrame;
  */
 public class uvod extends javax.swing.JFrame {
 
+    String typ = "";
+    String nazovTurnajaOrZapasu = "";
     /**
      * Creates new form zapas
      */
