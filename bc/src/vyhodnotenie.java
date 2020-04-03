@@ -117,6 +117,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
     }
     
     public void naplnenieTopHracov() throws FileNotFoundException{
+        ArrayList<String> hraciBody = new ArrayList<String>();
         int poradie = 0;
         for(int i = 0;i<tymy.size();i++){
             if(i == skore[0].length){
@@ -132,7 +133,91 @@ public class vyhodnotenie extends javax.swing.JFrame {
                     }
                     while(!nazov.equals(";")){
                         citac.next();
-                        topHraci.add(tymy.get(i).get(0));
+                        hraciBody.add(nazov = citac.next());
+                        hraciBody.add(nazov = citac.next());
+                        hraciBody.add(nazov = citac.next());
+                        hraciBody.add(nazov = citac.next());
+                    }
+                }
+            }
+        }
+        nastavenieBody(hraciBody);
+    }
+    
+    public void nastavenieBody(ArrayList<String> hraciBody){
+        for(int i = 0 ;i<hraciBody.size();i+=4){
+            int gol,a1,a2,kontrola;
+            kontrola = 0;
+            String tym = hraciBody.get(i);
+            gol = Integer.parseInt(hraciBody.get(i+1));
+            a1 = Integer.parseInt(hraciBody.get(i+2));
+            a2 = Integer.parseInt(hraciBody.get(i+3));
+            
+            for(int j = 0;j<topHraci.size();j+=5){
+                if(tym.equals(topHraci.get(j))){
+                    if(gol == Integer.parseInt(topHraci.get(j+1))){
+                        int body = Integer.parseInt(topHraci.get(j+3)) + 1;
+                        topHraci.set(j+3, String.valueOf(body));
+                        kontrola++;
+                    }
+                    if(a1 == Integer.parseInt(topHraci.get(j+1))){
+                        int body = Integer.parseInt(topHraci.get(j+4)) + 1;
+                        topHraci.set(j+4, String.valueOf(body));
+                        kontrola+= 5;
+                    }
+                    if(a2 == Integer.parseInt(topHraci.get(j+1))){
+                        int body = Integer.parseInt(topHraci.get(j+4)) + 1;
+                        topHraci.set(j+4, String.valueOf(body));
+                        kontrola+= 10;
+                    }
+                }
+            }
+            if(kontrola == 0){
+                vlozHraca(tym, gol, "1", "0");
+                vlozHraca(tym, a1, "0", "1");
+                vlozHraca(tym, a2, "0", "1");
+            }
+            if(kontrola == 1){
+                vlozHraca(tym, a1, "0", "1");
+                vlozHraca(tym, a2, "0", "1");
+            }
+            if(kontrola == 5){
+                vlozHraca(tym, gol, "1", "0");
+                vlozHraca(tym, a2, "0", "1");
+            }
+            if(kontrola == 10){
+                vlozHraca(tym, gol, "1", "0");
+                vlozHraca(tym, a1, "0", "1");
+            }
+            if(kontrola == 6){
+                vlozHraca(tym, a2, "0", "1");
+            }
+            if(kontrola == 11){
+                vlozHraca(tym, a1, "0", "1");
+            }
+            if(kontrola == 15){
+                vlozHraca(tym, gol, "1", "0");
+            }
+        }
+        doplnenieMien();
+    }
+    
+    private void vlozHraca(String tym,int dres,String gole,String asistencie){
+        topHraci.add(tym);
+        topHraci.add(String.valueOf(dres));
+        topHraci.add("");
+        topHraci.add(gole);
+        topHraci.add(asistencie);
+    }
+    
+    public void doplnenieMien(){
+        for(int i = 0;i<topHraci.size();i+=5){
+            for(int j = 0;j<tymy.size();j++){
+                if(topHraci.get(i).equals(tymy.get(j).get(0))){
+                    for(int h = 1;h<tymy.get(j).size();h+=2){
+                        if(topHraci.get(i+1).equals(tymy.get(j).get(h))){
+                            topHraci.set(i+2, tymy.get(j).get(h));
+                        }
                     }
                 }
             }

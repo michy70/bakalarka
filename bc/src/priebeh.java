@@ -307,9 +307,9 @@ public class priebeh extends javax.swing.JFrame {
     
     public void ulozenieGolovAleboTrestov(PrintWriter zapisovac, JTable tabulka){
         int pocetRiadkov = tabulka.getModel().getRowCount();
-        for(int i = 0;i<pocetRiadkov*4;i++){
-            if(tabulka.getModel().getValueAt(i / 4, i % 4) != null){
-                zapisovac.println(tabulka.getModel().getValueAt(i / 4, i % 4));
+        for(int i = 0;i<pocetRiadkov*5;i++){
+            if(tabulka.getModel().getValueAt(i / 5, i % 5) != null){
+                zapisovac.println(tabulka.getModel().getValueAt(i / 5, i % 5));
             }
         }
         zapisovac.println(";");
