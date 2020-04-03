@@ -54,11 +54,11 @@ public class priebeh extends javax.swing.JFrame {
         for(int i = 0;i<HH;i++){
             String data = citac.readLine();
             if(!data.equals(";")){
-                if(i%4 == 0){
+                if(i%5 == 0){
                     DefaultTableModel model = (DefaultTableModel) tabulka.getModel();
                     model.addRow(new Object[]{});
                 }
-                tabulka.getModel().setValueAt(data, i/4, i%4);
+                tabulka.getModel().setValueAt(data, i/5, i%5);
                 HH++;
             }  
         }
@@ -101,6 +101,7 @@ public class priebeh extends javax.swing.JFrame {
         setUndecorated(true);
 
         jPanel1.setBackground(new java.awt.Color(0, 255, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(1200, 800));
 
         exit.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
         exit.setText("X");
@@ -118,11 +119,11 @@ public class priebeh extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Cas", "Gol", "Asistencia 1", "Asistencia 2"
+                "Cas", "Tym", "Gol", "Asistencia 1", "Asistencia 2"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Integer.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -133,17 +134,24 @@ public class priebeh extends javax.swing.JFrame {
         tabulkaGole.setRowHeight(25);
         tabulkaGole.setSelectionBackground(new java.awt.Color(255, 0, 51));
         jScrollPane2.setViewportView(tabulkaGole);
+        if (tabulkaGole.getColumnModel().getColumnCount() > 0) {
+            tabulkaGole.getColumnModel().getColumn(0).setPreferredWidth(70);
+            tabulkaGole.getColumnModel().getColumn(1).setPreferredWidth(254);
+            tabulkaGole.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tabulkaGole.getColumnModel().getColumn(3).setPreferredWidth(70);
+            tabulkaGole.getColumnModel().getColumn(4).setPreferredWidth(70);
+        }
 
         tabulkaTrestov.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Cas", "Hrac", "Minuty", "Popis"
+                "Cas", "Tym", "Hrac", "Minuty", "Popis"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -151,6 +159,13 @@ public class priebeh extends javax.swing.JFrame {
             }
         });
         jScrollPane3.setViewportView(tabulkaTrestov);
+        if (tabulkaTrestov.getColumnModel().getColumnCount() > 0) {
+            tabulkaTrestov.getColumnModel().getColumn(0).setPreferredWidth(70);
+            tabulkaTrestov.getColumnModel().getColumn(1).setPreferredWidth(237);
+            tabulkaTrestov.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tabulkaTrestov.getColumnModel().getColumn(3).setPreferredWidth(50);
+            tabulkaTrestov.getColumnModel().getColumn(4).setPreferredWidth(150);
+        }
 
         pridatGol.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
         pridatGol.setText("Pridat gol");
@@ -192,26 +207,26 @@ public class priebeh extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(exit))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nadpisGole, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pridatGol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                        .addGap(28, 28, 28)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(pridatGol, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+                            .addComponent(nadpisGole, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(29, 29, 29)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(pridatTrest, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(nadpisTresty, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))))
+                            .addComponent(nadpisTresty, javax.swing.GroupLayout.DEFAULT_SIZE, 557, Short.MAX_VALUE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(exit)))
                 .addGap(22, 22, 22))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(300, 300, 300)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(ulozit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(497, 497, 497))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -230,9 +245,9 @@ public class priebeh extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(pridatTrest)
                     .addComponent(pridatGol))
-                .addGap(26, 26, 26)
+                .addGap(27, 27, 27)
                 .addComponent(ulozit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(35, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());

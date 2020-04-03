@@ -378,7 +378,7 @@ public class turnaj extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonHladatTabulkuMouseClicked
 
     private void startZapasuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startZapasuMouseClicked
-        String cesta = "C:\\Users\\bohuc\\Desktop\\bakalarka\\bc\\turnaj\\";
+        String cesta = "C:\\Users\\bohuc\\Desktop\\6.semester\\bakalarka\\bakalarka\\bc\\turnaj\\";
         cesta += this.nazovDomaci.getText() + "-vs-" + this.nazovHostia.getText();
         try {
             tvorbaZapasu(cesta);

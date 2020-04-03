@@ -1,5 +1,8 @@
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
@@ -18,6 +21,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
     String[][][] skore;
     ArrayList<ArrayList<String>> tymy;
     ArrayList<String> celkoveSkore = new ArrayList<String>();
+    ArrayList<String> topHraci = new ArrayList<String>();
     
     public vyhodnotenie(String[][][] skoreP,ArrayList<ArrayList<String>> tymyP) {
         initComponents();
@@ -91,18 +95,45 @@ public class vyhodnotenie extends javax.swing.JFrame {
         
         for(int i = 1;i<celkoveSkore.size();i+=3){
             for(int j = i+3;j<celkoveSkore.size();j+=3){
-                if(Integer.parseInt(celkoveSkore.get(i+1)) == Integer.parseInt(celkoveSkore.get(j+1)))
-                if(Integer.parseInt(celkoveSkore.get(i).substring(0,celkoveSkore.get(i).indexOf(":"))) < 
-                   Integer.parseInt(celkoveSkore.get(j).substring(0,celkoveSkore.get(i).indexOf(":")))){
-                    pomocka[0] = celkoveSkore.get(i-1);
-                    pomocka[1] = celkoveSkore.get(i);
-                    pomocka[2] = celkoveSkore.get(i+1);
-                    celkoveSkore.set(i-1, celkoveSkore.get(j-1));
-                    celkoveSkore.set(i, celkoveSkore.get(j));
-                    celkoveSkore.set(i+1, celkoveSkore.get(j+1));
-                    celkoveSkore.set(j-1, pomocka[0]);
-                    celkoveSkore.set(j, pomocka[1]);
-                    celkoveSkore.set(j+1, pomocka[2]);
+                if(Integer.parseInt(celkoveSkore.get(i+1)) == Integer.parseInt(celkoveSkore.get(j+1))){
+                    int tymARozdiel = Integer.parseInt(celkoveSkore.get(i).substring(0,celkoveSkore.get(i).indexOf(":")))
+                            - Integer.parseInt(celkoveSkore.get(i).substring(celkoveSkore.get(i).indexOf(":")+1));
+                    int tymBRozdiel = Integer.parseInt(celkoveSkore.get(j).substring(0,celkoveSkore.get(j).indexOf(":")))
+                            - Integer.parseInt(celkoveSkore.get(j).substring(celkoveSkore.get(j).indexOf(":")+1));
+                    if(tymARozdiel < tymBRozdiel){
+                        pomocka[0] = celkoveSkore.get(i-1);
+                        pomocka[1] = celkoveSkore.get(i);
+                        pomocka[2] = celkoveSkore.get(i+1);
+                        celkoveSkore.set(i-1, celkoveSkore.get(j-1));
+                        celkoveSkore.set(i, celkoveSkore.get(j));
+                        celkoveSkore.set(i+1, celkoveSkore.get(j+1));
+                        celkoveSkore.set(j-1, pomocka[0]);
+                        celkoveSkore.set(j, pomocka[1]);
+                        celkoveSkore.set(j+1, pomocka[2]);
+                    }
+                }
+            }
+        }
+    }
+    
+    public void naplnenieTopHracov() throws FileNotFoundException{
+        int poradie = 0;
+        for(int i = 0;i<tymy.size();i++){
+            if(i == skore[0].length){
+                poradie = skore[0].length;
+            }
+            for(int j = poradie;j< (i >= skore[0].length ? tymy.size() : skore[0].length) ;j++){
+                String nazov = "C:\\Users\\bohuc\\Desktop\\6.semester\\bakalarka\\bakalarka\\bc\\turnaj\\";
+                nazov += tymy.get(i).get(0) + "-vs-" + tymy.get(poradie).get(0);
+                File subor = new File(nazov);
+                if(subor.exists()){
+                    Scanner citac = new Scanner(subor);
+                    while(!(nazov = citac.next()).equals("Tabulka Golov")){
+                    }
+                    while(!nazov.equals(";")){
+                        citac.next();
+                        topHraci.add(tymy.get(i).get(0));
+                    }
                 }
             }
         }
