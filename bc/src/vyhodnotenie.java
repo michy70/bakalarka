@@ -37,6 +37,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
         }
     }
     
+    //nacitanie skore z odohtarych zapasov
     public void naplnenieCelkovehoSkore(){
         int obdrzaneGole,streleneGole,skupina,body;
         skupina = 0;
