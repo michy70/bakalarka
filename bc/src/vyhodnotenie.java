@@ -3,6 +3,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 
@@ -30,6 +32,11 @@ public class vyhodnotenie extends javax.swing.JFrame {
         tymy = tymyP;
         naplnenieCelkovehoSkore();
         nastavenieCelkovejTabulky();
+        try {
+            naplnenieTopHracov();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(vyhodnotenie.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void nastavenieCelkovejTabulky(){
@@ -125,18 +132,21 @@ public class vyhodnotenie extends javax.swing.JFrame {
             }
             for(int j = poradie;j< (i >= skore[0].length ? tymy.size() : skore[0].length) ;j++){
                 String nazov = "C:\\Users\\bohuc\\Desktop\\6.semester\\bakalarka\\bakalarka\\bc\\turnaj\\";
-                nazov += tymy.get(i).get(0) + "-vs-" + tymy.get(poradie).get(0);
+                nazov += tymy.get(i).get(0) + "-vs-" + tymy.get(j).get(0);
                 File subor = new File(nazov);
                 if(subor.exists()){
                     Scanner citac = new Scanner(subor);
-                    while(!(nazov = citac.next()).equals("Tabulka Golov")){
+                    nazov = citac.nextLine();
+                    while(!nazov.equals("Tabulka Golov")){
+                        nazov = citac.nextLine();
                     }
+                    citac.nextLine();
                     while(!nazov.equals(";")){
-                        citac.next();
-                        hraciBody.add(nazov = citac.next());
-                        hraciBody.add(nazov = citac.next());
-                        hraciBody.add(nazov = citac.next());
-                        hraciBody.add(nazov = citac.next());
+                        hraciBody.add(nazov = citac.nextLine());
+                        hraciBody.add(nazov = citac.nextLine());
+                        hraciBody.add(nazov = citac.nextLine());
+                        hraciBody.add(nazov = citac.nextLine());
+                        nazov = citac.nextLine();
                     }
                 }
             }
@@ -147,11 +157,15 @@ public class vyhodnotenie extends javax.swing.JFrame {
     public void nastavenieBody(ArrayList<String> hraciBody){
         for(int i = 0 ;i<hraciBody.size();i+=4){
             int gol,a1,a2,kontrola;
-            kontrola = 0;
+            gol = a1 = a2 = kontrola = 0;
             String tym = hraciBody.get(i);
             gol = Integer.parseInt(hraciBody.get(i+1));
             a1 = Integer.parseInt(hraciBody.get(i+2));
-            a2 = Integer.parseInt(hraciBody.get(i+3));
+            if(!hraciBody.get(i+3).equals("")){
+                a2 = Integer.parseInt(hraciBody.get(i+3));
+            } else {
+                kontrola += 10;
+            }
             
             for(int j = 0;j<topHraci.size();j+=5){
                 if(tym.equals(topHraci.get(j))){
@@ -216,7 +230,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
                 if(topHraci.get(i).equals(tymy.get(j).get(0))){
                     for(int h = 1;h<tymy.get(j).size();h+=2){
                         if(topHraci.get(i+1).equals(tymy.get(j).get(h))){
-                            topHraci.set(i+2, tymy.get(j).get(h));
+                            topHraci.set(i+2, tymy.get(j).get(h+1));
                         }
                     }
                 }
