@@ -521,7 +521,7 @@ public class zapas extends javax.swing.JFrame {
         }
         
         try {
-            turnaj turnaj1 = new turnaj();
+            turnaj turnaj1 = new turnaj(false);
             turnaj1.setVisible(true);
             turnaj1.pack();
             turnaj1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -529,8 +529,6 @@ public class zapas extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(zapas.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        //System.exit(0);
     }//GEN-LAST:event_jLabelExitMouseClicked
 
     public void exit() throws FileNotFoundException, IOException{        

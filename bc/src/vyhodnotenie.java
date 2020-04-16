@@ -1,6 +1,8 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -24,16 +26,18 @@ public class vyhodnotenie extends javax.swing.JFrame {
     ArrayList<ArrayList<String>> tymy;
     ArrayList<String> celkoveSkore = new ArrayList<String>();
     ArrayList<String> topHraci = new ArrayList<String>();
+    boolean vyhodnotenie = false;
     
-    public vyhodnotenie(String[][][] skoreP,ArrayList<ArrayList<String>> tymyP) {
+    public vyhodnotenie(String[][][] skoreP,ArrayList<ArrayList<String>> tymyP,boolean vyhod) {
         initComponents();
         this.setLocationRelativeTo(null);
         skore = skoreP;
         tymy = tymyP;
+        vyhodnotenie=vyhod;
         naplnenieCelkovehoSkore();
         nastavenieCelkovejTabulky();
         try {
-            naplnenieTopHracov();
+            naplnenieHracov();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(vyhodnotenie.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -123,7 +127,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
         }
     }
     
-    public void naplnenieTopHracov() throws FileNotFoundException{
+    public void naplnenieHracov() throws FileNotFoundException{
         ArrayList<String> hraciBody = new ArrayList<String>();
         int poradie = 0;
         for(int i = 0;i<tymy.size();i++){
@@ -131,7 +135,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
                 poradie = skore[0].length;
             }
             for(int j = poradie;j< (i >= skore[0].length ? tymy.size() : skore[0].length) ;j++){
-                String nazov = "C:\\Users\\bohuc\\Desktop\\6.semester\\bakalarka\\bakalarka\\bc\\turnaj\\";
+                String nazov = "C:\\Users\\bohuckm\\Desktop\\bakalarka\\bc\\turnaj\\";
                 nazov += tymy.get(i).get(0) + "-vs-" + tymy.get(j).get(0);
                 File subor = new File(nazov);
                 if(subor.exists()){
@@ -155,10 +159,11 @@ public class vyhodnotenie extends javax.swing.JFrame {
     }
     
     public void nastavenieBody(ArrayList<String> hraciBody){
+        int gol,a1,a2,kontrola;
+        String tym;
         for(int i = 0 ;i<hraciBody.size();i+=4){
-            int gol,a1,a2,kontrola;
             gol = a1 = a2 = kontrola = 0;
-            String tym = hraciBody.get(i);
+            tym = hraciBody.get(i);
             gol = Integer.parseInt(hraciBody.get(i+1));
             a1 = Integer.parseInt(hraciBody.get(i+2));
             if(!hraciBody.get(i+3).equals("")){
@@ -214,6 +219,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
             }
         }
         doplnenieMien();
+        vyhodnotenieTopHraci();
     }
     
     private void vlozHraca(String tym,int dres,String gole,String asistencie){
@@ -235,6 +241,89 @@ public class vyhodnotenie extends javax.swing.JFrame {
                     }
                 }
             }
+        }
+    }
+    
+    public void vyhodnotenieTopHraci(){
+        int hracA,hracB;
+        hracA = hracB = 0;
+        String pomoc;
+        for(int i = 3;i<topHraci.size()-5;i+=5){
+            hracA = Integer.parseInt(topHraci.get(i)) + Integer.parseInt(topHraci.get(i+1));
+            for(int j = i+5;j < topHraci.size();j+=5){
+                hracB = Integer.parseInt(topHraci.get(j)) + Integer.parseInt(topHraci.get(j+1));
+                if(hracA < hracB){
+                    //vymena nazvov tymov
+                    pomoc = topHraci.get(i-3);
+                    topHraci.set(i-3, topHraci.get(j-3));
+                    topHraci.set(j-3, pomoc);
+                    
+                    //vymena cisiel dresov
+                    pomoc = topHraci.get(i-2);
+                    topHraci.set(i-2, topHraci.get(j-2));
+                    topHraci.set(j-2, pomoc);
+                    
+                    //vymena mien hracov
+                    pomoc = topHraci.get(i-1);
+                    topHraci.set(i-1, topHraci.get(j-1));
+                    topHraci.set(j-1, pomoc);
+                    
+                    //vymena pocet golov
+                    pomoc = topHraci.get(i);
+                    topHraci.set(i, topHraci.get(j));
+                    topHraci.set(j, pomoc);
+                    
+                    //vymena pocet asistencii
+                    pomoc = topHraci.get(i+1);
+                    topHraci.set(i+1, topHraci.get(j+1));
+                    topHraci.set(j+1, pomoc);
+                    
+                    //nacitanie noveho skore hraca
+                    hracA = Integer.parseInt(topHraci.get(i)) + Integer.parseInt(topHraci.get(i+1));
+                    
+                } else if(Integer.parseInt(topHraci.get(i)) < Integer.parseInt(topHraci.get(j))){
+                    //vymena nazvov tymov
+                    pomoc = topHraci.get(i-3);
+                    topHraci.set(i-3, topHraci.get(j-3));
+                    topHraci.set(j-3, pomoc);
+                    
+                    //vymena cisiel dresov
+                    pomoc = topHraci.get(i-2);
+                    topHraci.set(i-2, topHraci.get(j-2));
+                    topHraci.set(j-2, pomoc);
+                    
+                    //vymena mien hracov
+                    pomoc = topHraci.get(i-1);
+                    topHraci.set(i-1, topHraci.get(j-1));
+                    topHraci.set(j-1, pomoc);
+                    
+                    //vymena pocet golov
+                    pomoc = topHraci.get(i);
+                    topHraci.set(i, topHraci.get(j));
+                    topHraci.set(j, pomoc);
+                    
+                    //vymena pocet asistencii
+                    pomoc = topHraci.get(i+1);
+                    topHraci.set(i+1, topHraci.get(j+1));
+                    topHraci.set(j+1, pomoc);
+                    
+                    //nacitanie noveho skore hraca
+                    hracA = Integer.parseInt(topHraci.get(i)) + Integer.parseInt(topHraci.get(i+1));
+                }
+            }
+        }
+        vypisTopHraci();
+    }
+    
+    public void vypisTopHraci(){
+        int pocet = topHraci.size()/5;
+        if(pocet > 10){
+            pocet = 10;
+        }
+        for(int i = 0;i<pocet;i++){
+            DefaultTableModel model = (DefaultTableModel) tabulkaTopHraci.getModel();
+            model.addRow(new Object[]{i+1,topHraci.get(i*5),topHraci.get(i*5+1),
+                        topHraci.get(i*5+2),topHraci.get(i*5+3),topHraci.get(i*5+4)});
         }
     }
 
@@ -259,10 +348,10 @@ public class vyhodnotenie extends javax.swing.JFrame {
         tabulkaCelkoveSkore = new javax.swing.JTable();
         jPanel4 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
-        setPreferredSize(new java.awt.Dimension(1300, 700));
 
         jPanel1.setBackground(new java.awt.Color(51, 255, 51));
         jPanel1.setPreferredSize(new java.awt.Dimension(1300, 700));
@@ -321,16 +410,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
         tabulkaTopHraci.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tabulkaTopHraci.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Poradie", "Tým", "Dres", "Meno", "Góle", "Asistencie"
@@ -408,6 +488,16 @@ public class vyhodnotenie extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setFont(new java.awt.Font("Tahoma", 1, 60)); // NOI18N
+        jButton2.setText("ULOZIT");
+        jButton2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(51, 0, 255), 3, true));
+        jButton2.setPreferredSize(new java.awt.Dimension(500, 100));
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -424,10 +514,15 @@ public class vyhodnotenie extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE))
                 .addGap(57, 57, 57))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(91, 91, 91)
-                .addComponent(jButton1)
-                .addGap(186, 186, 186)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(91, 91, 91)
+                        .addComponent(jButton1)
+                        .addGap(186, 186, 186)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(401, 401, 401)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -444,7 +539,9 @@ public class vyhodnotenie extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 401, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(924, 924, 924)
+                .addGap(43, 43, 43)
+                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(789, 789, 789)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton1)
                     .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -468,7 +565,17 @@ public class vyhodnotenie extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        System.exit(0);
+        try {
+            turnaj turnaj1 = new turnaj(vyhodnotenie);
+            turnaj1.setVisible(true);
+            turnaj1.pack();
+            turnaj1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            this.dispose();
+        } catch (IOException ex) {
+            Logger.getLogger(vyhodnotenie.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            
+        //System.exit(0);
     }//GEN-LAST:event_jLabel1MouseClicked
 
     private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
@@ -480,6 +587,49 @@ public class vyhodnotenie extends javax.swing.JFrame {
         model.addRow(new Object[]{});
     }//GEN-LAST:event_jButton1MouseClicked
 
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        try {
+            ulozenie();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(vyhodnotenie.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    public void ulozenie() throws FileNotFoundException{
+        vyhodnotenie=true;
+        
+        File subor = new File("vyhodnotenie.txt");
+        PrintWriter zapisovac = new PrintWriter(subor);
+        
+        //zapisanie vysledkov z tabulky skore
+        zapisovac.println("celkove skore");
+        for(int i = 0;i<celkoveSkore.size();i+=3){
+            zapisovac.println(i/3+1);
+            zapisovac.println(celkoveSkore.get(i));
+            zapisovac.println(celkoveSkore.get(i+1));
+            zapisovac.println(celkoveSkore.get(i+2));
+        }
+        zapisovac.println(";");
+        
+        //zapisanie vysledkov z tabulky top 10 hraci
+        zapisovac.println("top 10 hracov");
+        int pocet = topHraci.size()/5;
+        if(pocet > 10){
+            pocet = 10;
+        }
+        for(int i = 0;i<pocet;i++){
+            zapisovac.println(i+1);
+            zapisovac.println(topHraci.get(i*5));
+            zapisovac.println(topHraci.get(i*5+1));
+            zapisovac.println(topHraci.get(i*5+2));
+            zapisovac.println(topHraci.get(i*5+3));
+            zapisovac.println(topHraci.get(i*5+4));
+        }
+        zapisovac.println(";");
+        
+        zapisovac.close();
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -510,7 +660,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new vyhodnotenie(null,null).setVisible(true);
+                new vyhodnotenie(null,null,false).setVisible(true);
             }
         });
     }
@@ -519,6 +669,7 @@ public class vyhodnotenie extends javax.swing.JFrame {
     private javax.swing.JLabel CelkovaTabulka;
     private javax.swing.JLabel Top10Hraci;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;

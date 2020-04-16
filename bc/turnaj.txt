@@ -25,7 +25,7 @@ Dubnica
 10-g g
 ;
 6
-Piestany
+Piešťany
 11-j j
 12-i i
 ;
@@ -34,3 +34,168 @@ Zvolen
 13-n n
 14-m m
 ;
+;;
+Zilina-vs-Trencin
+Zilina
+Trencin
+2
+3
+2
+Domaci
+Supiska
+1
+a a
+
+
+2
+b b
+
+
+;
+Manazment
+Michal
+
+
+
+Zostava
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Hostia
+Supiska
+3
+c c
+
+
+4
+d d
+
+
+;
+Manazment
+
+
+
+
+Zostava
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Priebeh
+Tabulka Golov
+10:50
+Zilina
+1
+2
+
+2:2
+Trencin
+3
+4
+
+;
+Tabulka Trestov
+;
+;;
+Vyhodnotenie
+celkove skore
+1
+Trencin
+3:2
+3
+2
+Kosice
+0:0
+0
+3
+Bratislava
+0:0
+0
+4
+Dubnica
+0:0
+0
+5
+Piešťany
+0:0
+0
+6
+Zvolen
+0:0
+0
+7
+Zilina
+2:3
+0
+;
+top 10 hracov
+1
+Zilina
+1
+a a
+1
+0
+2
+Trencin
+3
+c c
+1
+0
+3
+Zilina
+2
+b b
+0
+1
+4
+Trencin
+4
+d d
+0
+1
+;
+;;

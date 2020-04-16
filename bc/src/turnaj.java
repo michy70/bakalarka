@@ -18,7 +18,9 @@ import javax.swing.table.DefaultTableModel;
  */
 public class turnaj extends javax.swing.JFrame {
 
+    boolean vyhodnotenie = false;
     String nazovTurnaja = "turnaj.txt";
+    //String nazovTurnajaFolder = nazovTurnaja.substring(0,nazovTurnaja.indexOf("."));
     int pocetTymov = 0;
     int pocetTymovVSkupine = 0;
     int pocetSkupin = 1;
@@ -27,8 +29,9 @@ public class turnaj extends javax.swing.JFrame {
     /**
      * Creates new form turnaj
      */
-    public turnaj() throws IOException {
+    public turnaj(boolean vyhod) throws IOException {
         initComponents();
+        vyhodnotenie = vyhod;
         tymy = new ArrayList<ArrayList<String>>();
         this.setLocationRelativeTo(null);
         
@@ -38,6 +41,9 @@ public class turnaj extends javax.swing.JFrame {
         nacitanieTymov(citac);
         nacitanieSkore();
         citac.close();
+        if(vyhodnotenie == true){
+            ulozenie();
+        }
     }
     
     public void naplnenieMoznosti(int pocetTymov){
@@ -82,7 +88,7 @@ public class turnaj extends javax.swing.JFrame {
                     || tymB == skupina*pocetTymovVSkupine+pocetTymovVSkupine - 1))){
                         if(tymA != tymB){
                             if(skore[skupina][tymA%pocetTymovVSkupine][tymB%pocetTymovVSkupine] == null){
-                                nazov = "C:\\Users\\bohuc\\Desktop\\6.semester\\bakalarka\\bakalarka\\bc\\turnaj\\";
+                                nazov = "C:\\Users\\bohuckm\\Desktop\\bakalarka\\bc\\turnaj\\";
                                 nazov += tymy.get(tymA).get(0) + "-vs-" + tymy.get(tymB).get(0);
                                 File subor = new File(nazov);
                                 if(subor.exists()){
@@ -123,7 +129,7 @@ public class turnaj extends javax.swing.JFrame {
         volbaTabulky = new javax.swing.JComboBox<>();
         jLabel1 = new javax.swing.JLabel();
         jButtonHladatTabulku = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        ulozit = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable = new javax.swing.JTable();
         startZapasu = new javax.swing.JButton();
@@ -196,12 +202,17 @@ public class turnaj extends javax.swing.JFrame {
         jPanel2.add(jButtonHladatTabulku);
         jButtonHladatTabulku.setBounds(430, 15, 120, 40);
 
-        jButton1.setFont(new java.awt.Font("Tahoma", 3, 36)); // NOI18N
-        jButton1.setText("U l o z i ť");
-        jButton1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 3));
-        jButton1.setPreferredSize(new java.awt.Dimension(100, 23));
-        jPanel2.add(jButton1);
-        jButton1.setBounds(900, 5, 250, 60);
+        ulozit.setFont(new java.awt.Font("Tahoma", 3, 36)); // NOI18N
+        ulozit.setText("U l o z i ť");
+        ulozit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 0, 0), 3));
+        ulozit.setPreferredSize(new java.awt.Dimension(100, 23));
+        ulozit.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ulozitMouseClicked(evt);
+            }
+        });
+        jPanel2.add(ulozit);
+        ulozit.setBounds(900, 5, 250, 60);
 
         jTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -361,14 +372,17 @@ public class turnaj extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jLabelExitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelExitMouseClicked
-        System.exit(0);
+        try {
+            exit();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(turnaj.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jLabelExitMouseClicked
 
     private void jLabelMiniMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabelMiniMouseClicked
         this.setState(JFrame.ICONIFIED);
     }//GEN-LAST:event_jLabelMiniMouseClicked
 
-    //11 znakov v nazve tymu
     private void jButtonHladatTabulkuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonHladatTabulkuMouseClicked
         String akaSkupina = (String)this.volbaTabulky.getSelectedItem();
         if(akaSkupina != null){
@@ -378,7 +392,7 @@ public class turnaj extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonHladatTabulkuMouseClicked
 
     private void startZapasuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_startZapasuMouseClicked
-        String cesta = "C:\\Users\\bohuc\\Desktop\\6.semester\\bakalarka\\bakalarka\\bc\\turnaj\\";
+        String cesta = "C:\\Users\\bohuckm\\Desktop\\bakalarka\\bc\\turnaj\\";
         cesta += this.nazovDomaci.getText() + "-vs-" + this.nazovHostia.getText();
         try {
             tvorbaZapasu(cesta);
@@ -395,13 +409,116 @@ public class turnaj extends javax.swing.JFrame {
     }//GEN-LAST:event_startZapasuMouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        vyhodnotenie zapas1 = new vyhodnotenie(skore,tymy);
+        vyhodnotenie zapas1 = new vyhodnotenie(skore,tymy,vyhodnotenie);
         zapas1.setVisible(true);
         zapas1.pack();
         zapas1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.dispose();
     }//GEN-LAST:event_jButton2MouseClicked
 
+    private void ulozitMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ulozitMouseClicked
+        try {
+            ulozenie();
+        } catch (IOException ex) {
+            Logger.getLogger(turnaj.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_ulozitMouseClicked
+
+    public void ulozenie() throws IOException{
+        if(vyhodnotenie == false){
+            vyhodnotenie zapas1 = new vyhodnotenie(skore,tymy,vyhodnotenie);
+            zapas1.setVisible(true);
+            zapas1.pack();
+            zapas1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            this.dispose();
+        }
+        
+        BufferedWriter zapisovac = new BufferedWriter(new FileWriter("pomocka.txt"));
+        BufferedReader citac = new BufferedReader(new FileReader(nazovTurnaja));
+        String pomocka = "";
+        for(int i = 0;i<pocetTymov;i++){
+            while(!(pomocka = citac.readLine()).equals(";")){
+                zapisovac.write(pomocka);
+                zapisovac.write("\n");
+            }
+            zapisovac.write(pomocka);
+            zapisovac.write("\n");
+        }
+        //zapisovac.close();
+        citac.close();
+        
+        /*zapisovac = new BufferedWriter(new FileWriter(nazovTurnaja));
+        citac = new BufferedReader(new FileReader("pomocka.txt"));
+        while((pomocka = citac.readLine()) != null){
+            zapisovac.write(pomocka);
+            zapisovac.write("\n");
+        }
+        citac.close();*/
+        zapisovac.write(";;");
+        zapisovac.write("\n");
+        
+        //ulozenie udajov z jednotlivych zapasov
+        String cesta = "";
+        boolean existuje;
+        for(int i =0;i<pocetTymov;i++){
+            for(int j = 0;j<pocetTymov;j++){
+                existuje = false;
+                cesta = "C:\\Users\\bohuckm\\Desktop\\bakalarka\\bc\\turnaj\\";
+                cesta += tymy.get(i).get(0) + "-vs-" + tymy.get(j).get(0);
+                File subor = new File(cesta);
+                if(subor.exists()){
+                    existuje = true;
+                }
+                if(existuje){
+                    citac = new BufferedReader(new FileReader(cesta));
+                    zapisovac.write(tymy.get(i).get(0) + "-vs-" + tymy.get(j).get(0));
+                    zapisovac.write("\n");
+                    while((pomocka=citac.readLine()) != null){
+                        zapisovac.write(pomocka);
+                        zapisovac.write("\n");
+                    }
+                    zapisovac.write(";;");
+                    zapisovac.write("\n");
+                }
+            }
+        }       
+        
+        //ulozenie udajov z vyhodnotenia
+        citac = new BufferedReader(new FileReader("vyhodnotenie.txt"));
+        zapisovac.write("Vyhodnotenie");
+        zapisovac.write("\n");
+        while((pomocka=citac.readLine()) != null){
+            zapisovac.write(pomocka);
+            zapisovac.write("\n");
+        }
+        zapisovac.write(";;");
+        zapisovac.write("\n");
+        
+        zapisovac.close();
+        
+        //prekopirovanie do textaku turnaj.txt
+        zapisovac = new BufferedWriter(new FileWriter(nazovTurnaja));
+        citac = new BufferedReader(new FileReader("pomocka.txt"));
+        while((pomocka = citac.readLine()) != null){
+            zapisovac.write(pomocka);
+            zapisovac.write("\n");
+        }
+        zapisovac.close();
+        citac.close();
+        
+        File subor = new File("pomocka.txt");
+        subor.delete();
+        vyhodnotenie = false;
+    }
+    
+    public void exit() throws FileNotFoundException{
+        File subor = new File("vyhodnotenie.txt");
+        PrintWriter citac = new PrintWriter(subor);
+        citac.flush();
+        citac.close();
+        System.exit(0);
+    }
+    
     public void tvornaTabulky(int cisloSkupiny){
         DefaultTableModel model = (DefaultTableModel) this.jTable.getModel();
         int nic = model.getRowCount();
@@ -557,7 +674,7 @@ public class turnaj extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    new turnaj().setVisible(true);
+                    new turnaj(false).setVisible(true);
                 } catch (IOException ex) {
                     Logger.getLogger(turnaj.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -566,7 +683,6 @@ public class turnaj extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButtonHladatTabulku;
     private javax.swing.JLabel jLabel1;
@@ -585,6 +701,7 @@ public class turnaj extends javax.swing.JFrame {
     private javax.swing.JTextField nazovDomaci;
     private javax.swing.JTextField nazovHostia;
     private javax.swing.JButton startZapasu;
+    private javax.swing.JButton ulozit;
     private javax.swing.JComboBox<String> volbaTabulky;
     // End of variables declaration//GEN-END:variables
 }
